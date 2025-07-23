@@ -353,7 +353,7 @@ struct {
 
 设计思路：
 
-<img src="./assets\Lab8_Locks.drawio.png" alt="Lab8_Locks.drawio" style="zoom:150%;" />
+<img src="./assets/Lab8_Locks.drawio.png" alt="Lab8_Locks.drawio" style="zoom:150%;" />
 
 1. 查询时刻的BUF与驱逐时刻的BUF状态不一致
 
