@@ -46,7 +46,7 @@ Sys39的三级页表实现
 
   - 最终物理地址：PPN（高44位） + 虚拟地址低12位偏移
 
-![image-20250722224554631](C:\Users\lione\Documents\Notes\CppNote\WilesNote\MIT_OS_6.S081\assets\image-20250722224554631.png)
+![image-20250722224554631](./assets/image-20250722224554631.png)
 
 ### TLB
 
@@ -58,7 +58,7 @@ Sys39的三级页表实现
 
 ### 内核地址空间
 
-![image-20250718011416694](C:\Users\lione\AppData\Roaming\Typora\typora-user-images\image-20250718011416694.png)
+![image-20250724004040444](assets/image-20250724004040444.png)
 
 **地址空间布局**：
 
@@ -92,11 +92,11 @@ Sys39的三级页表实现
 
 XV6的内存布局是内核自身的虚拟地址空间，而非用户进程的布局，内核虚拟地址空间布局如下：
 
-![image-20250718013156705](C:\Users\lione\Documents\Notes\CppNote\WilesNote\MIT_OS_6.S081\assets\image-20250718013156705.png)
+![image-20250718013156705](./assets\image-20250718013156705.png)
 
 在XV6中，用户进程的内存布局与内核完全分离，其虚拟地址空间独立于内核，并通过页表机制动态管理。
 
-![image-20250718013236685](C:\Users\lione\Documents\Notes\CppNote\WilesNote\MIT_OS_6.S081\assets\image-20250718013236685.png)
+![image-20250718013236685](./assets\image-20250718013236685.png)
 
 ## 具体实验细节
 
@@ -749,7 +749,7 @@ uint64 kvm_dealloc(pagetable_t page_table, uint64 old_size, uint64 new_size){
 
 通过查看XV6手册中，可以发现这个范围内的CLINT（核心本地中断器）的映射和刚刚说的这个范围产生了映射冲突。
 
-![image-20250722224837665](C:\Users\lione\Documents\Notes\CppNote\WilesNote\MIT_OS_6.S081\assets\image-20250722224837665.png)
+![image-20250722224837665](./assets\image-20250722224837665.png)
 
 不过，从XV6的手册中可知，CLINT映射只有在内核启动的时候才需要使用，在内核态的用户进程并不需要使用这个映射。
 
