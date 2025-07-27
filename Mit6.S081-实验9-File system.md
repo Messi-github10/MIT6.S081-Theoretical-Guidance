@@ -780,4 +780,140 @@ sys_open(void)
 }
 ```
 
+在kernel/syscall.h中，在 `syscall.h` 中定义 `#define SYS_symlink 22` 的目的是为 **符号链接（symbolic link）系统调用分配一个唯一的系统调用号**。
+
+```c++
+#define SYS_symlink 22
+```
+
+在kernel/syscall.c中，将 **系统调用号（syscall number）** 映射到对应的 **内核处理函数（syscall handler）**。
+
+```c++
+extern uint64 sys_chdir(void);
+extern uint64 sys_close(void);
+extern uint64 sys_dup(void);
+extern uint64 sys_exec(void);
+extern uint64 sys_exit(void);
+extern uint64 sys_fork(void);
+extern uint64 sys_fstat(void);
+extern uint64 sys_getpid(void);
+extern uint64 sys_kill(void);
+extern uint64 sys_link(void);
+extern uint64 sys_mkdir(void);
+extern uint64 sys_mknod(void);
+extern uint64 sys_open(void);
+extern uint64 sys_pipe(void);
+extern uint64 sys_read(void);
+extern uint64 sys_sbrk(void);
+extern uint64 sys_sleep(void);
+extern uint64 sys_unlink(void);
+extern uint64 sys_wait(void);
+extern uint64 sys_write(void);
+extern uint64 sys_uptime(void);
+extern uint64 sys_symlink(void);
+
+static uint64 (*syscalls[])(void) = {
+[SYS_fork]    sys_fork,
+[SYS_exit]    sys_exit,
+[SYS_wait]    sys_wait,
+[SYS_pipe]    sys_pipe,
+[SYS_read]    sys_read,
+[SYS_kill]    sys_kill,
+[SYS_exec]    sys_exec,
+[SYS_fstat]   sys_fstat,
+[SYS_chdir]   sys_chdir,
+[SYS_dup]     sys_dup,
+[SYS_getpid]  sys_getpid,
+[SYS_sbrk]    sys_sbrk,
+[SYS_sleep]   sys_sleep,
+[SYS_uptime]  sys_uptime,
+[SYS_open]    sys_open,
+[SYS_write]   sys_write,
+[SYS_mknod]   sys_mknod,
+[SYS_unlink]  sys_unlink,
+[SYS_link]    sys_link,
+[SYS_mkdir]   sys_mkdir,
+[SYS_close]   sys_close,
+[SYS_symlink] sys_symlink,
+};
+```
+
+在user/user.h中，提供一个`symlink`软链接的接口声明
+
+```c++
+// system calls
+int fork(void);
+int exit(int) __attribute__((noreturn));
+int wait(int*);
+int pipe(int*);
+int write(int, const void*, int);
+int read(int, void*, int);
+int close(int);
+int kill(int);
+int exec(char*, char**);
+int open(const char*, int);
+int mknod(const char*, short, short);
+int unlink(const char*);
+int fstat(int fd, struct stat*);
+int link(const char*, const char*);
+int mkdir(const char*);
+int chdir(const char*);
+int dup(int);
+int getpid(void);
+char* sbrk(int);
+int sleep(int);
+int uptime(void);
+int symlink(char* target, char* path);
+```
+
+在user/usys.pl中，提供 XV6 操作系统用户态系统调用的入口桩（syscall stubs），它的作用是为每个系统调用生成一段简短的 **汇编代码**，使得用户程序能够通过标准的函数调用方式触发系统调用，进入内核执行特权操作。
+
+```python
+entry("fork");
+entry("exit");
+entry("wait");
+entry("pipe");
+entry("read");
+entry("write");
+entry("close");
+entry("kill");
+entry("exec");
+entry("open");
+entry("mknod");
+entry("unlink");
+entry("fstat");
+entry("link");
+entry("mkdir");
+entry("chdir");
+entry("dup");
+entry("getpid");
+entry("sbrk");
+entry("sleep");
+entry("uptime");
+entry("symlink");
+```
+
+最后，在Makefile中添加上软链接实验的测试：
+
+```makefile
+UPROGS=\
+	$U/_cat\
+	$U/_echo\
+	$U/_forktest\
+	$U/_grep\
+	$U/_init\
+	$U/_kill\
+	$U/_ln\
+	$U/_ls\
+	$U/_mkdir\
+	$U/_rm\
+	$U/_sh\
+	$U/_stressfs\
+	$U/_usertests\
+	$U/_grind\
+	$U/_wc\
+	$U/_zombie\
+	$U/_symlinktest\
+```
+
 至此，这个实验就结束了！
