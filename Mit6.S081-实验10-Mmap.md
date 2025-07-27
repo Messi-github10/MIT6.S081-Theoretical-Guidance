@@ -53,9 +53,11 @@ MMAP（内存映射）是Unix/Linux系统中一种机制，允许进程将文件
 
 
 
-## 具体实验细节（Hard）
+## 具体实验细节
 
-### 定义VMA
+### MMAP（Hard）
+
+#### 定义VMA
 
 VMA记录了进程通过mmap申请的虚拟内存区域的各种信息，仅仅描述虚拟内存区域的逻辑属性。
 
@@ -132,7 +134,7 @@ struct proc {
 
 
 
-### 实现mmap系统调用
+#### 实现mmap系统调用
 
 参考Linux的mmap函数，我们需要在进程的vmas数组中遍历寻找空闲的vma。
 
@@ -330,7 +332,7 @@ usertrap(void)
 
 
 
-### 实现munmap的系统调用
+#### 实现munmap的系统调用
 
 > `sys_munmap(void)`：释放所有的VMA
 
@@ -557,7 +559,7 @@ fork(void)
 
 可是要想结束这个实验还要完成最后一步，那就是添加上`mmap`和`munmap`两个系统调用。
 
-### 添加`mmap`和`munmap`两个系统调用
+#### 添加`mmap`和`munmap`两个系统调用
 
 1. 在kernel/defs.h中
 
